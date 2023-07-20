@@ -8,10 +8,14 @@ const app = new App({
   logLevel: LogLevel.DEBUG
 });
 
-app.message('Är det fredag idag?', async ({ message, say }) => {
+app.message('Är det fredag idag?', async ({ say }) => {
   const d = new Date();
   const isFriday = (d.getDay() === 5) ? "Ja, mina bekanta. :fredag_mina_bekanta:" : "Nej. :fredag-idag:";
-  await say(`Hej <@${message.user}>! ${isFriday}`);
+  await say(isFriday);
+});
+
+app.message(/Varför?/i, async ({ say }) => {
+    await say (':sob: :sob: :banana:')
 });
 
 (async () => {
@@ -21,8 +25,6 @@ app.message('Är det fredag idag?', async ({ message, say }) => {
     res.status(200).send('Ok');
   });
 
-//   server.listen(process.env.PORT || 3000);
-
   await app.start(process.env.PORT || 3000);
-  console.log('⚡️ Bolt app is running!');
+  console.log('Fredag is running!');
 })();
