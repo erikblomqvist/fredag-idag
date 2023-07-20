@@ -1,1 +1,1 @@
-worker: node fredag.js
+web: node fredag.js
