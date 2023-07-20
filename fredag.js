@@ -21,7 +21,7 @@ app.message('Är det fredag idag?', async ({ message, say }) => {
     res.status(200).send('Ok');
   });
 
-  server.listen(process.env.PORT || 3000);
+//   server.listen(process.env.PORT || 3000);
 
   await app.start(process.env.PORT || 3000);
   console.log('⚡️ Bolt app is running!');
