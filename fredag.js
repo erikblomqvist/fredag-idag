@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { App, LogLevel } = require("@slack/bolt");
 const express = require('express');
+const moment = require('moment-timezone');
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -9,8 +10,10 @@ const app = new App({
 });
 
 app.message('Är det fredag idag?', async ({ say }) => {
-  const d = new Date();
-  const isFriday = (d.getDay() === 5) ? "Ja, mina bekanta. :fredag_mina_bekanta:" : "Nej. :fredag-idag:";
+  const d = moment().tz('Europe/Oslo');
+  const isFriday = (d.day() === 5)
+    ? "Ja, mina bekanta. :fredag_mina_bekanta:"
+    : "Nej. :fredag-idag:";
   await say(isFriday);
 });
 
