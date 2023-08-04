@@ -18,7 +18,11 @@ app.message('Är det fredag idag?', async ({ say }) => {
 });
 
 app.message(/Varför?/i, async ({ say }) => {
-    await say (':sob: :sob: :banana:')
+  const d = moment().tz('Europe/Oslo');
+  const isFriday = (d.day() === 5)
+    ? "Så är det bara. :fredag_mina_bekanta:"
+    : ":sob: :sob: :banana:";
+  await say(isFriday);
 });
 
 (async () => {
