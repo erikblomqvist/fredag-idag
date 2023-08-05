@@ -27,16 +27,15 @@ app.message('Är det fredag idag?', async ({ say }) => {
     await say(response)
 })
 
-app.message(/Varför?/i, async ({ message, client, say }) => {
-    const d = moment().tz('Europe/Oslo')
+app.message(/Varför\?/i, async ({ message, client, say }) => {
+    try {
+        // const d = moment().tz('Europe/Oslo');
+        // const isFriday = checkFriday(d)
+        const isFriday = true; // Hardcoded for testing
 
-    // const isFriday = checkFriday(d)
-    const isFriday = true
-
-    if (isFriday) {
-        try {
-            const haeljaFile = 'https://drive.google.com/uc?export=download&id=16OS9W6yTxS1fZz-BVLmx4lqt7EY9wVf1'
-            const fileResponse = await axios.get(haeljaFile, { responseType: 'arraybuffer' })
+        if (isFriday) {
+            const haeljaFile = 'https://drive.google.com/uc?export=download&id=16OS9W6yTxS1fZz-BVLmx4lqt7EY9wVf1';
+            const fileResponse = await axios.get(haeljaFile, { responseType: 'arraybuffer' });
 
             await client.files.upload({
                 channels: message.channel,
@@ -47,22 +46,15 @@ app.message(/Varför?/i, async ({ message, client, say }) => {
                         contentType: 'audio/m4a'
                     }
                 }
-            })
-        } catch (error) {
-            console.error('Error uploading file: ', error)
+            });
+        } else {
+            await say(':sob: :sob: :banana:');
         }
-    } else {
-        await say(':sob: :sob: :banana:')
+    } catch (error) {
+        console.error('Error in Varför message handler: ', error);
+        await say('Sorry, something went wrong.');
     }
-})
-
-// app.message(/Varför?/i, async ({ say }) => {
-//   const d = moment().tz('Europe/Oslo')
-//   const isFriday = (d.day() === 5)
-//     ? "Så är det bara. :fredag_mina_bekanta:"
-//     : ":sob: :sob: :banana:"
-//   await say(isFriday)
-// })
+});
 
 (async () => {
     const server = express()
