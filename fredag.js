@@ -37,15 +37,17 @@ app.message(/Varför\?/i, async ({ message, client, say }) => {
             const haeljaFile = 'https://github.com/erikblomqvist/fredag-idag/raw/main/haelj.m4a';
             const fileResponse = await axios.get(haeljaFile, { responseType: 'arraybuffer' });
 
+            // Convert buffer to readable stream
+            const fileStream = new Readable();
+            fileStream.push(fileResponse.data);
+            fileStream.push(null);
+
             await client.files.upload({
                 channels: message.channel,
-                file: {
-                    value: fileResponse.data,
-                    options: {
-                        filename: 'Nå ære Hælja.m4a',
-                        contentType: 'audio/m4a'
-                    }
-                }
+                file: fileStream,
+                filename: 'Nå ære Hælja.m4a',
+                filetype: 'audio/m4a',
+                title: 'Nå ære Hælja'
             });
         } else {
             await say(':sob: :sob: :banana:');
