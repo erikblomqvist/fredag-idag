@@ -30,9 +30,8 @@ app.message('Är det fredag idag?', async ({ say }) => {
 
 app.message(/Varför\?/i, async ({ message, client, say }) => {
     try {
-        // const d = moment().tz('Europe/Oslo');
-        // const isFriday = checkFriday(d)
-        const isFriday = true; // Hardcoded for testing
+        const d = moment().tz('Europe/Oslo');
+        const isFriday = checkFriday(d);
 
         if (isFriday) {
             const haeljaFile = 'https://github.com/erikblomqvist/fredag-idag/raw/main/haelj.m4a';
