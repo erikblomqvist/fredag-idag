@@ -18,7 +18,7 @@ app.message('Är det fredag idag?', async ({ say }) => {
     const isFriday = checkFriday(d)
     let response
 
-    if (isFriday(d)) {
+    if (isFriday) {
         response = "Ja, mina bekanta. :fredag_mina_bekanta:"
     } else {
         response = "Nej. :fredag-idag:"
