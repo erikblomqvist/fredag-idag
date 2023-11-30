@@ -1,5 +1,12 @@
 const OpenAI = require("openai");
 const cron = require('node-cron');
+const { App, LogLevel } = require("@slack/bolt");
+
+const app = new App({
+    token: process.env.SLACK_BOT_TOKEN,
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    logLevel: LogLevel.DEBUG
+});
 
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
