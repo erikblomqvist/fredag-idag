@@ -1,3 +1,13 @@
+const axios = require('axios');
+const { Readable } = require('stream');
+const { App, LogLevel } = require("@slack/bolt");
+
+const app = new App({
+    token: process.env.SLACK_BOT_TOKEN,
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    logLevel: LogLevel.DEBUG
+});
+
 const davidCommand = async ({ command, ack, say }) => {
     // Just post this picture: https://github.com/erikblomqvist/fredag-idag/raw/main/seybrew.jpg
     // in the #random channel
