@@ -4,6 +4,7 @@ const express = require('express')
 const moment = require('moment-timezone')
 const axios = require('axios')
 const OpenAI = require("openai");
+const cron = require('node-cron');
 const { Readable } = require('stream');
 
 const fredagBotId = 'U05EZGAEU0J';
@@ -105,7 +106,7 @@ app.event('reaction_added', async ({ event, client }) => {
 // Random greeting
 const generateRandomGreeting = async user => {
     try {
-        const prompt = `You’re a greeting bot, but also a little bit of a jerk. You’re programmed to greet people, but you’re also programmed to insult them, in a light hearted way. The greeting must be in Swedish, no more than 300 characters, and should be targeted against the user ${user}.`;
+        const prompt = `You’re a greeting bot, but also a little bit of a jerk. You’re programmed to greet people, but you’re also programmed to insult them, in a light hearted way. The greeting must be in Swedish, no more than 300 characters, and should be targeted against the user ${user}. The greeting always takes place on a Friday.`;
 
         const completion = await openai.chat.completions.create({
             messages: [
@@ -125,11 +126,48 @@ const generateRandomGreeting = async user => {
     }
 };
 
-app.message('botta', async ({ message, client, say }) => {
+const scheduleRandomGreeting = async () => {
+    // Every Friday at 10:00
+    cron.schedule('0 10 * * 5', async () => {
+        const channelId = 'C05ES6583LG';
+
+        try {
+            const result = await app.client.conversations.members({
+                channel: channelId
+            });
+            let { members } = result;
+            // Filter out fredag bot
+            members = members.filter(m => m !== fredagBotId);
+
+            const randomMember = members[Math.floor(Math.random() * members.length)];
+
+            const greeting = await generateRandomGreeting(`<@${randomMember}>`);
+
+            await app.client.chat.postMessage({
+                channel: channelId,
+                text: greeting
+            });
+        } catch (error) {
+            console.error('Error in scheduleRandomGreeting: ', error);
+        }
+    });
+};
+
+scheduleRandomGreeting();
+
+app.command('/greet', async ({ command, ack, say }) => {
+    console.log('Command: ', command);
+    
+    await ack();
+
+    console.log('Acked!')
+
     try {
-        // Fetch users of the channel
-        const result = await client.conversations.members({
-            channel: message.channel
+        const channelId = command.channel_id;
+        console.log('Channel id: ', channelId);
+
+        const result = await app.client.conversations.members({
+            channel: channelId
         });
         let { members } = result;
         // Filter out fredag bot
@@ -141,7 +179,7 @@ app.message('botta', async ({ message, client, say }) => {
 
         await say({ text: greeting });
     } catch (error) {
-        console.error('Error in botta message handler: ', error);
+        console.error('Error in greet command handler: ', error);
         await say('Nej, nu blev det fel. :fredag-idag:');
     }
 });
@@ -154,5 +192,5 @@ app.message('botta', async ({ message, client, say }) => {
     })
 
     await app.start(process.env.PORT || 3000)
-    console.log('Fredag är igång och då … då känns det som fredag!')
+    console.log('⚡️ Fredag är igång och då … då känns det som fredag!')
 })()
