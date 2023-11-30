@@ -183,6 +183,35 @@ app.command('/greet', async ({ command, ack, say }) => {
     }
 });
 
+app.command('/dåvid', async ({ command, ack, say }) => {
+    // Just post this picture: https://github.com/erikblomqvist/fredag-idag/raw/main/seybrew.jpg
+    // in the #random channel
+    await ack();
+
+    try {
+        const channelId = command.channel_id;
+
+        const seybrewFile = 'https://github.com/erikblomqvist/fredag-idag/raw/main/seybrew.jpg';
+        const fileResponse = await axios.get(seybrewFile, { responseType: 'arraybuffer' });
+
+        // Convert buffer to readable stream
+        const fileStream = new Readable();
+        fileStream.push(fileResponse.data);
+        fileStream.push(null);
+
+        await app.client.files.upload({
+            channels: channelId,
+            file: fileStream,
+            filename: 'Dåvid',
+            filetype: 'jpg',
+            title: 'Dåvid'
+        });
+    } catch (error) {
+        console.error('Error in dåvid command handler: ', error);
+        await say('Nej, nu blev det fel. :fredag-idag:');
+    }
+});
+
 (async () => {
     const server = express()
 
