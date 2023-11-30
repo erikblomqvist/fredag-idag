@@ -150,6 +150,9 @@ const scheduleRandomGreeting = async () => {
         } catch (error) {
             console.error('Error in scheduleRandomGreeting: ', error);
         }
+    }, {
+        scheduled: true,
+        timezone: 'Europe/Oslo'
     });
 };
 
