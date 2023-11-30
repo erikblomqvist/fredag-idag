@@ -5,22 +5,22 @@ const soundboardOptions = [
     {
         name: 'darlig-service',
         file: 'darlig-service.m4a',
-        title: 'Dårlig service'
+        title: 'Dårlig service :rolling-eyes:'
     },
     {
         name: 'fredag-min-venn',
         file: 'det-er-fredag-min-venn.wav',
-        title: 'Det er fredag min venn'
+        title: ':sparkles: Det er fredag min venn :sparkles:'
     },
     {
         name: 'knekk',
         file: 'knekk.m4a',
-        title: 'Knekk'
+        title: 'Knekk :mango-ipa-intensifies:'
     },
     {
         name: 'supertirsdag',
         file: 'supertirsdag.m4a',
-        title: 'Supertirsdag'
+        title: 'Supertirsdag :tada:'
     },
     {
         name: 'tirsdag-skjer-ingenting',
@@ -30,7 +30,7 @@ const soundboardOptions = [
     {
         name: 'whyyy',
         file: 'whyyy.mp3',
-        title: 'Whyyy'
+        title: 'Whyyy :whyyy:'
     }
 ];
 
