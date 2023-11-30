@@ -5,11 +5,18 @@ const moment = require('moment-timezone')
 const axios = require('axios')
 const { Readable } = require('stream')
 
+console.log('Environment Variables:', {
+    SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN ? 'Exists' : 'Not Found',
+    SLACK_SIGNING_SECRET: process.env.SLACK_SIGNING_SECRET ? 'Exists' : 'Not Found'
+});
+
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     logLevel: LogLevel.DEBUG
 })
+
+console.log('Slack app initialized:', app !== undefined);
 
 const checkFriday = d => d.day() === 5
 
