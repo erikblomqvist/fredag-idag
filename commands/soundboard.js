@@ -3,8 +3,8 @@ const { Readable } = require('stream');
 
 const soundboardOptions = [
     {
-        name: 'darlig-service',
-        file: 'darlig-service.m4a',
+        name: 'daarlig-service',
+        file: 'daarlig-service.m4a',
         title: 'Dårlig service :rolling-eyes:'
     },
     {
