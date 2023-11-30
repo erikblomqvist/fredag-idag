@@ -18,7 +18,7 @@ const whyMessage = async ({ message, client, say }) => {
             fileStream.push(fileResponse.data);
             fileStream.push(null);
 
-            await client.files.upload({
+            await client.files.uploadV2({
                 channels: message.channel,
                 file: fileStream,
                 filename: 'Nå ære Hælja.m4a',

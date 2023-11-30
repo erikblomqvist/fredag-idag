@@ -24,7 +24,7 @@ const davidCommand = async ({ command, ack, say }) => {
         fileStream.push(fileResponse.data);
         fileStream.push(null);
 
-        await app.client.files.upload({
+        await app.client.files.uploadV2({
             channels: channelId,
             file: fileStream,
             filename: 'Dåvid',

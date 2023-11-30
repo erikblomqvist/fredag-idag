@@ -5,7 +5,7 @@ const soundboardOptions = [
     {
         name: 'daarlig-service',
         file: 'daarlig-service.m4a',
-        title: 'Dårlig service :rolling-eyes:'
+        title: 'Dårlig service :face_with_rolling_eyes:'
     },
     {
         name: 'fredag-min-venn',
@@ -63,7 +63,7 @@ const processSoundSelection = async (sound, channelId, client) => {
         soundStream.push(fileResponse.data);
         soundStream.push(null);
 
-        await client.files.upload({
+        await client.files.uploadV2({
             channels: channelId,
             file: soundStream,
             filename: sound.title,
