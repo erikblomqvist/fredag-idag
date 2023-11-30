@@ -52,9 +52,7 @@ const soundboardOptions = [
 const processSoundSelection = async (sound, channelId, client) => {
     try {
         const baseUrl = 'https://github.com/erikblomqvist/fredag-idag/raw/main/soundboard/';
-        
         const soundUrl = `${baseUrl}${sound.file}`;
-        const fileType = sound.file.split('.')[1];
         
         const fileResponse = await axios.get(soundUrl, { responseType: 'arraybuffer' });
 
@@ -67,7 +65,6 @@ const processSoundSelection = async (sound, channelId, client) => {
             channels: channelId,
             file: soundStream,
             filename: sound.title,
-            filetype: `audio/${fileType}`,
             title: sound.title
         });
     } catch (error) {
@@ -90,11 +87,11 @@ const soundboardCommand = async ({ command, ack, respond, client }) => {
         if(sound) {
             const channelId = command.channel_id;
             
-            await respond(`Laster inn ${sound.title} … :loading:`);
+            await respond(`:loading: Laster inn "${sound.title}"…`);
             
             await processSoundSelection(sound, channelId, client);
         } else {
-            await respond(`Nei, den lyden finnes ikke. Du kan velge mellom disse lydene: \`${soundboardOptions.map(o => o.name).join(', ')}\``);
+            await respond(`Nei, den lyden finnes ikke. Du kan velge mellom disse: \`${soundboardOptions.map(o => o.name).join(', ')}\``);
         }
     } catch (error) {
         console.error('Error in soundboard command handler: ', error);
