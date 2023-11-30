@@ -13,9 +13,19 @@ const soundboardOptions = [
         title: ':sparkles: Det er fredag min venn :sparkles:'
     },
     {
+        name: 'emotional-damage',
+        file: 'emotional-damage.m4a',
+        title: 'Emotional damage :emotional_damage:'
+    },
+    {
         name: 'knekk',
         file: 'knekk.m4a',
         title: 'Knekk :mango-ipa-intensifies:'
+    },
+    {
+        name: 'pet-dawg',
+        file: 'pet-dawg.m4a',
+        title: 'Can I pet that dawg? :dog:'
     },
     {
         name: 'supertirsdag',
@@ -26,6 +36,11 @@ const soundboardOptions = [
         name: 'tirsdag-skjer-ingenting',
         file: 'tirsdag-skjer-det-absolutt-ingenting.m4a',
         title: 'Tirsdag skjer det absolutt ingenting'
+    },
+    {
+        name: 'varfor',
+        file: 'varfor.wav',
+        title: 'Varför? :sob:'
     },
     {
         name: 'whyyy',
