@@ -97,6 +97,28 @@ app.event('reaction_added', async ({ event, client }) => {
     }
 });
 
+// Random greeting
+app.message('botta', async ({ message, client, say }) => {
+    try {
+        // Fetch users of the channel
+        const result = await client.conversations.members({
+            channel: message.channel
+        });
+        let { members } = result;
+        console.log('Members: ', members);
+        members = members.filter(({ is_bot }) => !is_bot);
+
+        const randomMember = members[Math.floor(Math.random() * members.length)];
+
+        const greeting = `Hei <@${randomMember}>, håper du har en fin dag!!`;
+
+        await say(greeting);
+    } catch (error) {
+        console.error('Error in botta message handler: ', error);
+        await say('Sorry, something went wrong.');
+    }
+});
+
 (async () => {
     const server = express()
 
