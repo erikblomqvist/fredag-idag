@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { App, LogLevel, reactionAdded } = require("@slack/bolt")
+const { App, LogLevel } = require("@slack/bolt")
 const express = require('express')
 const moment = require('moment-timezone')
 const axios = require('axios')
@@ -75,7 +75,7 @@ app.message(/Varför\?/i, async ({ message, client, say }) => {
 
 app.event('reaction_added', async ({ event, client }) => {
     try {
-        if(event.reaction === '69') {
+        if (event.reaction === '69') {
             const oneDayAgo = moment().subtract(1, 'days').unix()
             const history = await client.conversations.history({
                 channel: event.item.channel,
@@ -84,7 +84,7 @@ app.event('reaction_added', async ({ event, client }) => {
 
             const reactedMessage = history.messages.find(m => m.ts === event.item.ts)
 
-            if(reactedMessage) {
+            if (reactedMessage) {
                 await client.reactions.add({
                     channel: event.item.channel,
                     timestamp: event.item.ts,
@@ -94,6 +94,40 @@ app.event('reaction_added', async ({ event, client }) => {
         }
     } catch (error) {
         console.error('Error in reaction_added event handler: ', error)
+    }
+})
+
+
+// Random greeting
+async function fetchUsers(client) {
+    try {
+        const result = await client.users.list()
+
+        return result.members.filter(member => !member.is_bot && !member.deleted)
+    } catch (error) {
+        console.error('Error fetching users:', error)
+        return []
+    }
+}
+
+async function sendRandomGreeting(client) {
+    const users = await fetchUsers(client)
+
+    if (users.length > 0) {
+        const randomUser = users[Math.floor(Math.random() * users.length)]
+        const text = `Hello <@${randomUser.id}>! Hope you're having a great day!`
+
+        // Uncomment the following line for production
+        const channel = 'erik-testing'
+        // const channel = 'random'
+
+        await client.chat.postMessage({ channel, text })
+    }
+}
+
+app.message('botta', async ({ message, client }) => {
+    if (message.channel === 'erik-testing') {
+        await sendRandomGreeting(client)
     }
 })
 
