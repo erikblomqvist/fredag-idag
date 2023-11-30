@@ -8,6 +8,7 @@ const cron = require('node-cron');
 const { Readable } = require('stream');
 
 const fredagBotId = 'U05EZGAEU0J';
+const randomChannelId = 'C05ES6583LG';
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
@@ -18,6 +19,15 @@ const app = new App({
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 const checkFriday = d => d.day() === 5
+
+const getRandomMember = body => {
+    let { members } = body;
+    members =  members.filter(m => m !== fredagBotId);
+
+    const randomMember = members[Math.floor(Math.random() * members.length)];
+
+    return randomMember;
+}
 
 app.message('Är det fredag idag?', async ({ say }) => {
     const d = moment().tz('Europe/Oslo');
@@ -129,22 +139,16 @@ const generateRandomGreeting = async user => {
 const scheduleRandomGreeting = async () => {
     // Every Friday at 10:00
     cron.schedule('0 10 * * 5', async () => {
-        const channelId = 'C05ES6583LG';
-
         try {
             const result = await app.client.conversations.members({
-                channel: channelId
+                channel: randomChannelId
             });
-            let { members } = result;
-            // Filter out fredag bot
-            members = members.filter(m => m !== fredagBotId);
-
-            const randomMember = members[Math.floor(Math.random() * members.length)];
+            const randomMember = getRandomMember(result);
 
             const greeting = await generateRandomGreeting(`<@${randomMember}>`);
 
             await app.client.chat.postMessage({
-                channel: channelId,
+                channel: randomChannelId,
                 text: greeting
             });
         } catch (error) {
@@ -159,24 +163,16 @@ const scheduleRandomGreeting = async () => {
 scheduleRandomGreeting();
 
 app.command('/greet', async ({ command, ack, say }) => {
-    console.log('Command: ', command);
-    
     await ack();
-
-    console.log('Acked!')
 
     try {
         const channelId = command.channel_id;
-        console.log('Channel id: ', channelId);
 
         const result = await app.client.conversations.members({
             channel: channelId
         });
-        let { members } = result;
-        // Filter out fredag bot
-        members = members.filter(m => m !== fredagBotId);
 
-        const randomMember = members[Math.floor(Math.random() * members.length)];
+        const randomMember = getRandomMember(result);
 
         const greeting = await generateRandomGreeting(`<@${randomMember}>`);
 
