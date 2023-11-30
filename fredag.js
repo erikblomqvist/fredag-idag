@@ -8,7 +8,7 @@ const rovenMessage = require('./messages/roven');
 const whyMessage = require('./messages/why');
 
 // Events
-const reaction69Event = require('./events/reaction69');
+const copyReactionEvent = require('./events/copy-reaction');
 
 // Commands
 const { greetCommand, scheduleRandomGreeting } = require('./commands/greet');
@@ -29,7 +29,7 @@ app.message('Röven!', rovenMessage);
 app.message(/Varför\?/i, whyMessage);
 
 // Events
-app.event('reaction_added', reaction69Event);
+app.event('reaction_added', copyReactionEvent);
 
 // Commands
 app.command('/greet', greetCommand);

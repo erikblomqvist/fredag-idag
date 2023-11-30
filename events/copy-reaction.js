@@ -1,8 +1,14 @@
 const moment = require('moment-timezone')
 
-const reaction69Event = async ({ event, client }) => {
+const copyableReactions = [
+    '69',
+    'no-teeth',
+    'dino_dance'
+]
+
+const copyReactionEvent = async ({ event, client }) => {
     try {
-        if(event.reaction === '69') {
+        if(copyableReactions.includes(event.reaction)) {
             const oneDayAgo = moment().subtract(1, 'days').unix();
             const history = await client.conversations.history({
                 channel: event.item.channel,
@@ -15,7 +21,7 @@ const reaction69Event = async ({ event, client }) => {
                 await client.reactions.add({
                     channel: event.item.channel,
                     timestamp: event.item.ts,
-                    name: '69'
+                    name: event.reaction
                 });
             }
         }
@@ -24,4 +30,4 @@ const reaction69Event = async ({ event, client }) => {
     }
 };
 
-module.exports = reaction69Event;
+module.exports = copyReactionEvent;
