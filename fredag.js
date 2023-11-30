@@ -3,6 +3,7 @@ const { App, LogLevel } = require("@slack/bolt")
 const express = require('express')
 const moment = require('moment-timezone')
 const axios = require('axios')
+const OpenAI = require("openai");
 const { Readable } = require('stream');
 
 const fredagBotId = 'U05EZGAEU0J';
@@ -12,6 +13,8 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     logLevel: LogLevel.DEBUG
 })
+
+const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 const checkFriday = d => d.day() === 5
 
@@ -71,7 +74,7 @@ app.message(/Varför\?/i, async ({ message, client, say }) => {
         }
     } catch (error) {
         console.error('Error in Varför message handler: ', error);
-        await say('Sorry, something went wrong.');
+        await say('Nej, nu blev det fel. :fredag-idag:');
     }
 });
 
@@ -102,26 +105,23 @@ app.event('reaction_added', async ({ event, client }) => {
 // Random greeting
 const generateRandomGreeting = async user => {
     try {
-        const prompt = `You’re a greeting bot, but also a little bit of a jerk. You’re programmed to greet people, but you’re also programmed to insult them, in a light hearted way. The greeting should be in Norwegian to the user ${user}.`;
+        const prompt = `You’re a greeting bot, but also a little bit of a jerk. You’re programmed to greet people, but you’re also programmed to insult them, in a light hearted way. The greeting must be in Swedish, no more than 300 characters, and should be targeted against the user ${user}.`;
 
-        const response = await axios.post(
-            'https://api.openai.com/v1/engines/gpt-3.5-turbo/completions',
-            {
-                prompt,
-                max_tokens: 64
-            },
-            {
-                headers: {
-                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                    'Content-Type': 'application/json'
+        const completion = await openai.chat.completions.create({
+            messages: [
+                {
+                    role: 'system',
+                    content: prompt
                 }
-            }
-        );
+            ],
+            model: 'gpt-4-1106-preview',
+            max_tokens: 200
+        });
 
-        return response.data.choices[0].text.trim();
+        return completion.choices[0].message.content;
     } catch (error) {
         console.error('Error in generateRandomGreeting: ', error);
-        return 'Sorry, something went wrong.';
+        return 'Nej, nu blev det fel. :fredag-idag:';
     }
 };
 
@@ -139,10 +139,10 @@ app.message('botta', async ({ message, client, say }) => {
 
         const greeting = await generateRandomGreeting(`<@${randomMember}>`);
 
-        await say(greeting);
+        await say({ text: greeting });
     } catch (error) {
         console.error('Error in botta message handler: ', error);
-        await say('Sorry, something went wrong.');
+        await say('Nej, nu blev det fel. :fredag-idag:');
     }
 });
 
@@ -154,5 +154,5 @@ app.message('botta', async ({ message, client, say }) => {
     })
 
     await app.start(process.env.PORT || 3000)
-    console.log('Fredag is running!')
+    console.log('Fredag är igång och då … då känns det som fredag!')
 })()
