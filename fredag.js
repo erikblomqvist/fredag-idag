@@ -5,6 +5,8 @@ const moment = require('moment-timezone')
 const axios = require('axios')
 const { Readable } = require('stream');
 
+const fredagBotId = 'U05EZGAEU0J';
+
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -98,6 +100,31 @@ app.event('reaction_added', async ({ event, client }) => {
 });
 
 // Random greeting
+const generateRandomGreeting = async user => {
+    try {
+        const prompt = `You’re a greeting bot, but also a little bit of a jerk. You’re programmed to greet people, but you’re also programmed to insult them, in a light hearted way. The greeting should be in Norwegian to the user ${user}.`;
+
+        const response = await axios.post(
+            'https://api.openai.com/v1/engines/gpt-3.5-turbo/completions',
+            {
+                prompt,
+                max_tokens: 64
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        return response.data.choices[0].text.trim();
+    } catch (error) {
+        console.error('Error in generateRandomGreeting: ', error);
+        return 'Sorry, something went wrong.';
+    }
+};
+
 app.message('botta', async ({ message, client, say }) => {
     try {
         // Fetch users of the channel
@@ -105,12 +132,12 @@ app.message('botta', async ({ message, client, say }) => {
             channel: message.channel
         });
         let { members } = result;
-        console.log('Members: ', members);
-        members = members.filter(({ is_bot }) => !is_bot);
+        // Filter out fredag bot
+        members = members.filter(m => m !== fredagBotId);
 
         const randomMember = members[Math.floor(Math.random() * members.length)];
 
-        const greeting = `Hei <@${randomMember}>, håper du har en fin dag!!`;
+        const greeting = await generateRandomGreeting(`<@${randomMember}>`);
 
         await say(greeting);
     } catch (error) {
