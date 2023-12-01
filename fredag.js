@@ -14,6 +14,7 @@ const copyReactionEvent = require('./events/copy-reaction');
 const { greetCommand, scheduleRandomGreeting } = require('./commands/greet');
 const davidCommand = require('./commands/david');
 const soundboardCommand = require('./commands/soundboard');
+const slaveCommand = require('./commands/slave');
 
 
 const app = new App({
@@ -36,6 +37,7 @@ app.command('/greet', greetCommand);
     scheduleRandomGreeting();
 app.command('/dåvid', davidCommand);
 app.command('/soundboard', soundboardCommand);
+app.command('/fredag', slaveCommand);
 
 
 (async () => {
