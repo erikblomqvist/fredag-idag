@@ -8,6 +8,11 @@ const soundboardOptions = [
         title: 'Dårlig service :face_with_rolling_eyes:'
     },
     {
+        name: 'mandag',
+        file: 'det-er-mandag.wav',
+        title: 'Det er mandag! :sunny:'
+    },
+    {
         name: 'fredag-min-venn',
         file: 'det-er-fredag-min-venn.wav',
         title: ':sparkles: Det er fredag min venn :sparkles:'
