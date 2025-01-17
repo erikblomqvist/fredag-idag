@@ -33,7 +33,7 @@ const generateRandomGreeting = async user => {
                     content: prompt
                 }
             ],
-            model: 'gpt-4-1106-preview',
+            model: 'gpt-4o-mini',
             max_tokens: 200
         });
 
